@@ -16,16 +16,38 @@ class ViewController: UIViewController {
     var timer: Timer?
     var intValue: Int = 0
     
+    var timerIsWorking: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        NotificationCenter.default.addObserver(self, selector: #selector(pauseTimer), name: UIApplication.willResignActiveNotification, object: nil)
-
+        timerIsWorking = false
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
+        
+       
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         
     }
+    
+    @objc func appMovedToBackground() {
+        pauseTimer()
+        timerIsWorking = false
+        print("On back")
+    }
+    
+    @objc func appMovedToForeground() {
+        launchTimer()
+        timerIsWorking = true
+        print("On fore")
+    }
+
 
     @IBAction func startButtonClick(_ sender: Any) {
+        timerIsWorking = true
         startButton.isEnabled = false
         stopButton.isEnabled = true
         launchTimer()
@@ -33,6 +55,7 @@ class ViewController: UIViewController {
     
     
     @IBAction func stopButtonClick(_ sender: Any) {
+        timerIsWorking = false
         startButton.isEnabled = true
         stopButton.isEnabled = false
         pauseTimer()
