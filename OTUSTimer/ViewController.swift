@@ -17,50 +17,39 @@ class ViewController: UIViewController {
     var intValue: Int = 0
     
     var timerIsWorking: Bool = false
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
-        print("Таймер в viewDidLoad - \(timerIsWorking)")
-        
-        /*if timerIsWorking == false {
-            pauseTimer()
-        }*/
-  
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
-        
-        //timerIsWorking = false
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
     
 
     @objc func appMovedToBackground() {
         pauseTimer()
-        timerIsWorking = false
         print("On back")
     }
     
     @objc func appMovedToForeground() {
         launchTimer()
-        timerIsWorking = true
         print("On fore")
     }
 
-
     @IBAction func startButtonClick(_ sender: Any) {
-        timerIsWorking = true
+       // timerIsWorking = true
         print("Таймер после старта - \(timerIsWorking)")
         startButton.isEnabled = false
         stopButton.isEnabled = true
         launchTimer()
     }
     
-    
     @IBAction func stopButtonClick(_ sender: Any) {
-        timerIsWorking = false
+      //  timerIsWorking = false
         print("Таймер после остановки - \(timerIsWorking)")
         startButton.isEnabled = true
         stopButton.isEnabled = false
@@ -77,8 +66,6 @@ class ViewController: UIViewController {
     @objc private func pauseTimer() {
         timer?.invalidate()
     }
-    
-    
     
     @objc func timerLogics() {
         intValue += 1
